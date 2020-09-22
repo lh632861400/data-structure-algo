@@ -1,0 +1,43 @@
+{
+  "name": "data-structure-algo",
+  "version": "1.0.0",
+  "description": "data-structure althri",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -e $GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,json} !**/es/** !**/lib/**": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lh632861400/data-structure-algo.git"
+  },
+  "keywords": [
+    "data-structure",
+    "algo"
+  ],
+  "author": "lh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lh632861400/data-structure-algo/issues"
+  },
+  "homepage": "https://github.com/lh632861400/data-structure-algo#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/prompt-cli": "^11.0.0",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.0",
+    "prettier": "^2.1.2"
+  }
+}
