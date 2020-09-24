@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "./outdir",
+    "target": "es2015",
+    "module": "commonjs"
+  }
+}
