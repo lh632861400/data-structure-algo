@@ -55,7 +55,7 @@ describe('SingleNoCircleLinkedList', () => {
     expect(linkedList.getElement(1)).toBe(33);
   })
 
-  test.only("getElement from index", () => {
+  test("getElement from index", () => {
     const linkedList = new SingleNoCircleLinkedList<Number>();
     linkedList.add(11);
     linkedList.add(22);
