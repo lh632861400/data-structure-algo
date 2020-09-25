@@ -1,6 +1,7 @@
 import SingleNoCircleLinkedList from "../SingleNoCircleLinkedList";
+import DuplxNoCircleLinkedList from "../../duplx/DuplxNoCircleLinkedList";
 
-const linkedList = new SingleNoCircleLinkedList<Number>();
+const linkedList = new DuplxNoCircleLinkedList<Number>();
 linkedList.add(11);
 linkedList.add(22);
 linkedList.add(33);
