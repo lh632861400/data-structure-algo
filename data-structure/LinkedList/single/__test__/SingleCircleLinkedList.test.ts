@@ -17,7 +17,7 @@ describe('SingleCircleLinkedList', () => {
   });
 
   test("contains 11", () => {
-    const linkedList = new SingleNoCircleLinkedList<Number>();
+    const linkedList = new SingleCircleLinkedList<Number>();
     linkedList.add(11);
     linkedList.add(22);
     linkedList.add(33);
@@ -29,7 +29,7 @@ describe('SingleCircleLinkedList', () => {
   })
 
   test("contains getElement From index equals 2 return 33", () => {
-    const linkedList = new SingleNoCircleLinkedList<Number>();
+    const linkedList = new SingleCircleLinkedList<Number>();
     linkedList.add(11);
     linkedList.add(22);
     linkedList.add(33);
@@ -38,6 +38,46 @@ describe('SingleCircleLinkedList', () => {
 
     expect(() => { linkedList.getElement(11) }).toThrow();
     expect(linkedList.getElement(2)).toBe(33)
+  })
+
+  test("has a circle", () => {
+    const linkedList = new SingleCircleLinkedList<Number>();
+    linkedList.add(11);
+    linkedList.add(22);
+    linkedList.add(33);
+    linkedList.add(44);
+    linkedList.add(1);
+
+    for(let i = 0; i <= linkedList.getSize(); i++) {
+      if(i < linkedList.getSize()) {
+        expect(linkedList.next()).toBe(linkedList.getElement(i));
+      }else {
+        expect(linkedList.next()).toBe(linkedList.getElement(0));
+      }
+    }
+  })
+
+  test("remove element", () => {
+    const linkedList = new SingleCircleLinkedList<Number>();
+    linkedList.add(11);
+    linkedList.add(22);
+    linkedList.add(33);
+    linkedList.add(44);
+    linkedList.add(1);
+
+    linkedList.remove(0);
+
+    linkedList.remove();
+
+    expect(linkedList.getSize()).toBe(3)
+    expect(linkedList.getElement(1)).toBe(33);
+    for(let i = 0; i <= linkedList.getSize(); i++) {
+      if(i < linkedList.getSize()) {
+        expect(linkedList.next()).toBe(linkedList.getElement(i));
+      }else {
+        expect(linkedList.next()).toBe(linkedList.getElement(0));
+      }
+    }
   })
 
 });

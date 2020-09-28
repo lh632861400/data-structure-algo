@@ -3,6 +3,7 @@ import AbstractList from "../AbstractList";
 export default class SingleCircleLinkedList<E> extends AbstractList<E> {
   size;
   firstNode;
+  current: LinkedListNode<E>;
 
   constructor() {
     super();
@@ -49,6 +50,25 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
 
   }
 
+  next(): E {
+    if(!this.current) {
+      this.current = this.firstNode;
+    }
+
+    if(!this.current) {
+      return undefined;
+    }
+
+    const oldElement = this.current.element;
+    this.current = this.current.next;
+
+    return oldElement;
+  }
+
+  reset(): void {
+    this.current = this.firstNode;
+  }
+
   node(index): LinkedListNode<E> {
     this.rangeCheck(index);
 
@@ -75,12 +95,19 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
       const next = this.firstNode.next;
 
       // 只有一个元素
-      this.firstNode = next === this.firstNode ? undefined : next;
+      const nextFirstNode = next === this.firstNode ? undefined : next;
+      this.node(this.size - 1).next = nextFirstNode;
+      this.firstNode = nextFirstNode;
+
     }else {
       const prev = this.node(index - 1);
       node = prev.next;
       const next = prev.next.next;
       prev.next = next;
+    }
+
+    if(node === this.current) {
+      this.current = undefined;
     }
 
     this.size--;
@@ -91,6 +118,7 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
   clear(): void {
     this.firstNode = undefined;
     this.size = 0;
+    this.current = undefined;
   }
 
   contains(element: E): boolean {
