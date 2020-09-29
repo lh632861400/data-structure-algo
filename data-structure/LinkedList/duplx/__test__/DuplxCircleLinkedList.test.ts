@@ -1,10 +1,13 @@
 import {describe, expect, test} from '@jest/globals'
+import DuplxCircleLinkedList from "../DuplxCircleLinkedList";
 import DuplxNoCircleLinkedList from "../DuplxNoCircleLinkedList";
+import SingleCircleLinkedList from "../../single/SingleCircleLinkedList";
 
-describe('DuplxNoCircleLinkedList', () => {
+describe('DuplxCircleLinkedList', () => {
+
   test('size equal 5', () => {
 
-    const linkedList = new DuplxNoCircleLinkedList();
+    const linkedList = new DuplxCircleLinkedList();
     linkedList.add(11);
     linkedList.add(22);
     linkedList.add(33);
@@ -17,7 +20,7 @@ describe('DuplxNoCircleLinkedList', () => {
 
   test('get element from index', () => {
 
-    const linkedList = new DuplxNoCircleLinkedList();
+    const linkedList = new DuplxCircleLinkedList();
     linkedList.add(11);
     linkedList.add(22);
     linkedList.add(33);
@@ -34,7 +37,7 @@ describe('DuplxNoCircleLinkedList', () => {
 
   test('set element from index', () => {
 
-    const linkedList = new DuplxNoCircleLinkedList();
+    const linkedList = new DuplxCircleLinkedList();
     linkedList.add(11);
     linkedList.add(22);
     linkedList.add(33);
@@ -52,28 +55,9 @@ describe('DuplxNoCircleLinkedList', () => {
 
   });
 
-  test('remove element', () => {
-
-    const linkedList = new DuplxNoCircleLinkedList();
-    linkedList.add(11);
-    linkedList.add(22);
-    linkedList.add(33);
-    linkedList.add(44);
-    linkedList.add(0, 1);
-
-    linkedList.remove();
-
-    linkedList.remove(0);
-
-    expect(linkedList.getElement(0)).toBe(11)
-    expect(() => { linkedList.remove(-1) }).toThrow();
-    expect(() => { linkedList.remove(linkedList.getSize()) }).toThrow();
-
-  });
-
   test('clear', () => {
 
-    const linkedList = new DuplxNoCircleLinkedList();
+    const linkedList = new DuplxCircleLinkedList();
     linkedList.add(11);
     linkedList.add(22);
     linkedList.add(33);
@@ -85,4 +69,21 @@ describe('DuplxNoCircleLinkedList', () => {
     expect(linkedList.getSize()).toBe(0)
 
   });
-});
+
+  test("has a circle", () => {
+    const linkedList = new SingleCircleLinkedList<Number>();
+    linkedList.add(11);
+    linkedList.add(22);
+    linkedList.add(33);
+    linkedList.add(44);
+    linkedList.add(1);
+
+    for(let i = 0; i <= linkedList.getSize(); i++) {
+      if(i < linkedList.getSize()) {
+        expect(linkedList.next()).toBe(linkedList.getElement(i));
+      }else {
+        expect(linkedList.next()).toBe(linkedList.getElement(0));
+      }
+    }
+  })
+})

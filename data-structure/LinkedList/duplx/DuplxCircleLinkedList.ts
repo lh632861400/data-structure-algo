@@ -28,16 +28,23 @@ export default class DuplxCircleLinkedList<E> extends AbstractList<E> {
     this.rangeCheckForAdd(index);
 
     if(index === 0) { // 在第一个位置插入node
-      let next = this.size === 0 ? undefined : this.firstNode;
-      const newNode = new LinkedListNode<E>(undefined, element, next);
-      newNode.next = next;
+      let next = this.firstNode;
+      const newNode = new LinkedListNode<E>(this.lastNode, element, next);
       this.firstNode = newNode;
 
-      if(this.size === 0) {
-        this.lastNode = newNode
+
+      if(next) {
+        next.prev = newNode;
       }
 
-      newNode.next = this.firstNode;
+      if(this.size === 0) { // 如果不存在节点
+        this.lastNode = newNode;
+        newNode.prev = newNode;
+        newNode.next = this.firstNode;
+      }else {
+        newNode.prev = this.lastNode;
+        this.lastNode.next = newNode;
+      }
 
     }else {
       // 之前的index - 1位置的node
