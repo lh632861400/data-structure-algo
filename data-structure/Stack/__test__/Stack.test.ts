@@ -62,4 +62,15 @@ describe('Stack', () => {
 
   })
 
+  test('peek element from stack', () => {
+    const stack = new Stack<Number>();
+    for(let i = 0; i < 10; i++){
+      stack.push(i);
+    }
+
+    expect(stack.peek()).toBe(9);
+    expect(stack.size()).toBe(10);
+    
+  })
+
 });
