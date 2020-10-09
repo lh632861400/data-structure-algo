@@ -71,7 +71,7 @@ describe('DuplxCircleLinkedList', () => {
   });
 
   test("has a circle", () => {
-    const linkedList = new SingleCircleLinkedList<Number>();
+    const linkedList = new DuplxCircleLinkedList<Number>();
     linkedList.add(11);
     linkedList.add(22);
     linkedList.add(33);
