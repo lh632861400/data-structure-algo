@@ -70,7 +70,7 @@ describe('Stack', () => {
 
     expect(stack.peek()).toBe(9);
     expect(stack.size()).toBe(10);
-    
+
   })
 
 });
