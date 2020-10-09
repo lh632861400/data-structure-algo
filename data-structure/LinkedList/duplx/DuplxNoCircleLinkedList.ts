@@ -86,7 +86,7 @@ export default class DuplxNoCircleLinkedList<E> extends AbstractList<E> {
         this.firstNode = next;
       }
     }else {
-      const node = this.node(index );
+      node = this.node(index );
       const prev = node.prev;
       const next = node.next;
       prev.next = next;

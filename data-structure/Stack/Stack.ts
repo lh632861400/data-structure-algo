@@ -43,4 +43,15 @@ export default class Stack<E> implements IStack<E> {
     this.list.add(e);
   }
 
+  toString() {
+    let result = "";
+    result += "[";
+    for(let i = 0; i < this.list.size; i++) {
+      result += this.list.getElement(i) + ", ";
+    }
+    result += "]";
+
+    return result;
+  }
+
 }
