@@ -1,6 +1,6 @@
 /**
  *
- * Based on LinkedList
+ * Based on LinkedList 队列
  * @module Queue
  *
  * */
@@ -10,11 +10,9 @@ import {IQueue} from "./IQueue";
 
 export default class Queue<E> implements IQueue<E> {
 
-  size;
   list: SingleCircleLinkedList<E>;
 
   constructor() {
-    this.size = 0;
     this.list = new SingleCircleLinkedList<E>();
   }
 
@@ -24,7 +22,7 @@ export default class Queue<E> implements IQueue<E> {
    *
    * */
   isEmpty(): boolean {
-    return this.size === 0;
+    return this.list.size === 0;
   }
 
   dequeue(): E {
@@ -41,7 +39,6 @@ export default class Queue<E> implements IQueue<E> {
 
   clear(): void {
     this.list.clear();
-    this.size = 0;
   }
 
 }
