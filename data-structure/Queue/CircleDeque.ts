@@ -113,6 +113,18 @@ export default class CircleDeque<E> {
     }
   }
 
+  toString() {
+    let result = '';
+    result = `size=${this.size}, front=${this.front}, [`
+    for(let i = 0; i < this.size; i++) {
+      result += this.elements[this.index(i)] + ", "
+    }
+
+    result += "]"
+
+    return result;
+  }
+
 }
 
 CircleDeque.DEFAULT_CAPACITY = 10;
