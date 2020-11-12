@@ -23,7 +23,7 @@ export default class CircleQueue<E> {
    * */
   private front: number;
 
-  private static DEFAULT_CAPACITY = 10;
+  public static DEFAULT_CAPACITY: number;
 
   constructor() {
     this.size = 0;
@@ -42,7 +42,8 @@ export default class CircleQueue<E> {
   dequeue(): E {
     this.checkNotEmpty();
 
-    const element = this.elements[this.index(this.size - 1)];
+    const element = this.elements[this.front];
+    this.front = (this.front + 1) % this.elements.length;
     this.size--;
     return element;
   }
@@ -102,3 +103,5 @@ export default class CircleQueue<E> {
   }
 
 }
+
+CircleQueue.DEFAULT_CAPACITY = 10;

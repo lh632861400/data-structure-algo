@@ -1,5 +1,4 @@
 import {describe, expect, test} from '@jest/globals'
-import Queue from "../Queue";
 import Deque from "../Deque";
 
 describe('Deque', () => {
