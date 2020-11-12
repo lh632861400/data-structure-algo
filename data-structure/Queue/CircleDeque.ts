@@ -1,60 +1,57 @@
 /**
  *
- * Based on ArrayList 循环队列
- * @module CircleQueue
+ * Based on ArrayList 双端循环队列
+ * @module Queue
  *
  * */
 
-export default class CircleQueue<E> {
+export default class CircleDeque<E> {
 
-  private size: number;
-
-  /**
-   *
-   * @member front 当前队头的索引
-   *
-   * */
-  private elements: Array<E>;
-
-  /**
-   *
-   * @member front 当前队头的索引
-   *
-   * */
-  private front: number;
+  size: number;
+  front: number;
+  elements: Array<E>;
 
   public static DEFAULT_CAPACITY: number;
 
   constructor() {
     this.size = 0;
     this.front = 0;
-    this.elements = new Array(CircleQueue.DEFAULT_CAPACITY)
+    this.elements = new Array<E>(CircleDeque.DEFAULT_CAPACITY)
   }
 
-  clear(): void {
-    for(let i = 0; i < this.elements.length; i++) {
-      this.elements[i] = undefined;
-    }
-    this.size = 0;
-    this.front = 0;
+  /**
+   *
+   * 是否为空
+   *
+   * */
+  isEmpty(): boolean {
+    return this.size === 0;
   }
 
-  dequeue(): E {
+  dequeueFront(): E {
     this.checkNotEmpty();
-
     const element = this.elements[this.front];
     this.front = (this.front + 1) % this.elements.length;
     this.size--;
     return element;
   }
 
-  private checkNotEmpty() {
-    if(this.size === 0) {
-      throw new RangeError('the queue is empty')
-    }
+  dequeueRear(): E {
+    this.checkNotEmpty();
+    const element = this.elements[this.index(this.size - 1)];
+    this.size--;
+    return element;
   }
 
-  enqueue(element: E): void {
+  enqueueFront(element: E): void {
+    this.ensureCapacity(this.size + 1);
+    const front = this.index(-1);
+    this.elements[front] = element;
+    this.front = front;
+    this.size++
+  }
+
+  enqueueRear(element: E): void {
     this.ensureCapacity(this.size + 1);
 
     this.elements[this.index(this.size)] = element;
@@ -95,13 +92,27 @@ export default class CircleQueue<E> {
   }
 
   peekFront(): E {
-    return this.elements[this.front];
+    return this.elements[this.front]
   }
 
-  isEmpty(): boolean {
-    return this.size === 0;
+  peekRear(): E {
+    return this.elements[this.index(this.size - 1)]
+  }
+
+  checkNotEmpty() {
+    if(this.size === 0) {
+      throw new RangeError('the queue is empty')
+    }
+  }
+
+  clear(): void {
+    this.size = 0;
+    this.front = 0;
+    for(let i = 0; i < this.elements.length; i++) {
+      this.elements[i] = undefined;
+    }
   }
 
 }
 
-CircleQueue.DEFAULT_CAPACITY = 10;
+CircleDeque.DEFAULT_CAPACITY = 10;

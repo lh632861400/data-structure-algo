@@ -3,7 +3,7 @@ import SingleCircleLinkedList from "../LinkedList/single/SingleCircleLinkedList"
 /**
  *
  * Based on LinkedList 双端队列
- * @module Queue
+ * @module Deque
  *
  * */
 
