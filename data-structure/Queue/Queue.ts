@@ -18,6 +18,11 @@ export default class Queue<E> implements IQueue<E> {
     this.list = new SingleCircleLinkedList<E>();
   }
 
+  /**
+   *
+   * 是否为空
+   *
+   * */
   isEmpty(): boolean {
     return this.size === 0;
   }
@@ -35,7 +40,7 @@ export default class Queue<E> implements IQueue<E> {
   }
 
   clear(): void {
-    this.list.clear()
+    this.list.clear();
     this.size = 0;
   }
 
