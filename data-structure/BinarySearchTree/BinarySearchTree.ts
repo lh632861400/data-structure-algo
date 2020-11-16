@@ -125,12 +125,12 @@ export default class BinarySearchTree<E> {
       return;
     }
 
-    this.preorderNode(node.left, visitor);
+    this.inorderNode(node.left, visitor);
     if(visitor.stop) {
       return;
     }
     visitor.visit(node.element);
-    this.preorderNode(node.right, visitor);
+    this.inorderNode(node.right, visitor);
   }
 
   postorder(visitor: Visitor<E>): void {
@@ -139,7 +139,7 @@ export default class BinarySearchTree<E> {
       return;
     }
 
-    this.preorderNode(this.root, visitor);
+    this.postorderNode(this.root, visitor);
 
   }
 

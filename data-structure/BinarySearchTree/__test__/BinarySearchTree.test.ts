@@ -130,4 +130,85 @@ describe('BinarySearchTree', () => {
     console.log(bst.toString())
 
   })
+
+  test('preorder', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+
+    //  9 5 4 6 11 10 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    let count = 0;
+    let result = [9, 5, 4, 6, 11, 10, 14]
+    bst.preorder({
+      stop: false,
+      visit(element: number): void {
+        expect(element).toBe(result[count]);
+        count++;
+      }
+    })
+
+  })
+
+  test('inorder', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+
+    //  4 5 6 9 10 11 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    let count = 0;
+    let result = [4, 5, 6, 9, 10, 11, 14]
+    bst.inorder({
+      stop: false,
+      visit(element: number): void {
+        expect(element).toBe(result[count]);
+        count++;
+      }
+    })
+
+  })
+
+  test('postorder', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+
+    //  4 6 5 10 14 11 9
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    let count = 0;
+    let result = [4, 6, 5, 10, 14, 11, 9]
+    bst.postorder({
+      stop: false,
+      visit(element: number): void {
+        expect(element).toBe(result[count]);
+        count++;
+      }
+    })
+
+  })
 });
