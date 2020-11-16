@@ -3,6 +3,7 @@ export default interface IBinarySearchTree<E> {
   sizeMember: number;
   root: AbstractNode<E>;
   size(): number;
+  isEmpty(): boolean;
   clear(): void;
   add(element: E): void;
   remove(element: E): void;
@@ -30,4 +31,8 @@ export interface Visitor<E> {
 
   visit(element: E): void;
 
+}
+
+export interface Comparator<E> {
+  compare(e1: E, e2: E): number;
 }

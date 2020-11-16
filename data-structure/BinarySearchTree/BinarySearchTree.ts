@@ -4,15 +4,17 @@
  * @module Stack
  *
  * */
-import IBinarySearchTree, {AbstractNode, Visitor} from "./IBinarySearchTree";
+import IBinarySearchTree, {AbstractNode, Comparator, Visitor} from "./IBinarySearchTree";
 import Queue from "../Queue/Queue";
 
 export default class BinarySearchTree<E> {
   private root: Node<E>;
   private sizeMember: number;
+  private comparator: Comparator<E>;
 
-  constructor() {
+  constructor(comparator?: Comparator<E>) {
     this.sizeMember = 0;
+    this.comparator = comparator;
   }
 
   add(element: E): void {
@@ -60,6 +62,10 @@ export default class BinarySearchTree<E> {
    *
    * */
   private compare(e1: E, e2: E): number {
+    if(this.comparator) {
+      return this.comparator.compare(e1, e2);
+    }
+
     let cmp = 0;
     if(e1 > e2) cmp = 1;
     if(e1 < e2) cmp = -1;
@@ -92,7 +98,7 @@ export default class BinarySearchTree<E> {
       return;
     }
 
-    console.log(node.element);
+    visitor.visit(node.element)
     this.preorderNode(node.left, visitor);
     this.preorderNode(node.right, visitor);
 
@@ -143,6 +149,10 @@ export default class BinarySearchTree<E> {
     return this.sizeMember;
   }
 
+  isEmpty() {
+    return this.size() === 0;
+  }
+
   height(): number {
     return 0;
   }
@@ -162,7 +172,7 @@ export default class BinarySearchTree<E> {
    * 打印当前节点的树形结构
    *
    * */
-  toStringTree(result: string, node: Node<E>, prefix: string) {
+  private toStringTree(result: string, node: Node<E>, prefix: string) {
 
     let str = ''
 
@@ -172,7 +182,7 @@ export default class BinarySearchTree<E> {
 
     prefix = `${prefix}[${node === node.parent.left ? 'L' : 'R'}]`;
 
-    str += `${prefix} ${node.element.toString()}`;
+    str += `${prefix} ${node.element.toString()}_p${node.parent.element.toString()}`;
 
     result = result + '\n'
     result += str;
