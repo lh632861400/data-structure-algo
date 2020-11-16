@@ -194,31 +194,109 @@ export default class BinarySearchTree<E> {
 
   }
 
-  predecessor(node: Node<E>): Node<E> {
+  predecessor(element: E): E{
+    const targetNode = this.node(element);
+
+    if(!targetNode) { // 不存在element这个元素
+      return undefined;
+    }
+
+    const predecessor = this.predecessorNode(targetNode);
+
+    if(predecessor) { // 如果存在前去节点
+      return predecessor.element
+    }
+
+    return undefined;
+  }
+
+  private predecessorNode(node: Node<E>): Node<E> {
 
     // node.left != null，node.left.right.right.right...
     if(node.left) {
       node = node.left;
       while(node.right) {
+        console.log(node.element)
         node = node.right;
       }
 
       return node;
     }
 
-    // 寻找node.parent.parent.parent 到 node 为祖先节点某一个右子树上
+    // 寻找node.parent.parent.parent 到 node 的祖先节点某一个右子树上
     while (node.parent) {
       if(node === node.parent.right) {
         return node.parent;
       }
     }
-    
+
     return undefined;
   }
 
-  successor(node: Node<E>): Node<E> {
+  successor(element: E): E {
+    const targetNode = this.node(element);
+
+    if(!targetNode) { // 不存在element这个元素
+      return undefined;
+    }
+
+    const predecessor = this.predecessorNode(targetNode);
+
+    if(predecessor) { // 如果存在前去节点
+      return predecessor.element
+    }
+
     return undefined;
   }
+
+  private succesorNode(node: Node<E>): Node<E> {
+
+    // node.right != null，node.right.left.left.left...
+    if(node.right) {
+      node = node.right;
+      while(node.left) {
+        node = node.left;
+      }
+
+      return node;
+    }
+
+    // 寻找node.parent.parent.parent 到 node 的祖先节点某一个左子树上
+    while (node.parent) {
+      if(node === node.parent.left) {
+        return node.parent;
+      }
+    }
+
+    return undefined;
+  }
+
+  private node(element: E): Node<E> {
+    if(!this.root) {
+      return null;
+    }
+
+    let node = this.root;
+
+    // 遍历树形结构，查找相同的element
+    while(node) {
+      const cmp = this.compare(element, node.element);
+
+      if(cmp < 0) { // 查找元素小于当前node.element
+        node = node.left;
+      }else if(cmp > 0) { // 查找元素大于当前node.element
+        node = node.right;
+      }else if(cmp === 0) { // 查找到改元素
+        return node;
+      }
+    }
+
+    // 没有找到该元素
+
+    return undefined;
+
+  }
+
   remove(element: E): void {
   }
 

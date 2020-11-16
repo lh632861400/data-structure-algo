@@ -239,4 +239,29 @@ describe('BinarySearchTree', () => {
     })
 
   })
+
+  test('predecessor', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+    //               8
+
+    //  9 5 11 4 6 8 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14, 8]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    expect(bst.predecessor(9)).toBe(8);
+    expect(bst.predecessor(11)).toBe(10);
+    expect(bst.predecessor(4)).toBe(undefined);
+    expect(bst.predecessor(2)).toBe(undefined);
+    expect(bst.predecessor(6)).toBe(5);
+    expect(bst.predecessor(8)).toBe(6);
+
+  })
 });
