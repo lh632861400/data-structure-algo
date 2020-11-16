@@ -211,4 +211,32 @@ describe('BinarySearchTree', () => {
     })
 
   })
+
+  test('levelOrder', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+
+    //  9 5 11 4 6 8 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    let count = 0;
+    let result = [9, 5, 11, 4, 6, 10, 14]
+    bst.levelOrder({
+      stop: false,
+      visit(element: number): void {
+        console.log(element)
+        expect(element).toBe(result[count]);
+        count++;
+      }
+    })
+
+  })
 });

@@ -143,13 +143,13 @@ export default class BinarySearchTree<E> {
 
   }
 
-  postorderNode(node: Node<E>, visitor: Visitor<E>): void {
+  private postorderNode(node: Node<E>, visitor: Visitor<E>): void {
     if(!node || visitor.stop) {
       return;
     }
 
-    this.preorderNode(node.left, visitor);
-    this.preorderNode(node.right, visitor);
+    this.postorderNode(node.left, visitor);
+    this.postorderNode(node.right, visitor);
     if(visitor.stop) {
       return;
     }
@@ -162,23 +162,23 @@ export default class BinarySearchTree<E> {
       return;
     }
 
-    const queue = new Queue<Node<E>>();
+    const queue = []
 
-    queue.enqueue(this.root);
+    queue.push(this.root);
 
     // 遍历当前节点的左节点和右节点，加入到队列
-    while(!queue.isEmpty() && !visitor.stop) {
+    while(!queue.length && !visitor.stop) {
 
-      const node = queue.dequeue();
+      const node = queue.shift();
 
       visitor.visit(node.element);
 
       if(node.left) {
-        queue.enqueue(node.left);
+        queue.push(node.left);
       }
 
       if(node.right) {
-        queue.enqueue(node.right);
+        queue.push(node.right);
       }
     }
 
