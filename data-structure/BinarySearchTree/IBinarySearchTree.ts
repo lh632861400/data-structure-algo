@@ -11,9 +11,9 @@ export default interface IBinarySearchTree<E> {
   height(): number;
   isComplete(): boolean;
   preorder(visitor: Visitor<E>): void;
-  inorder(): void;
-  postorder(): void;
-  levelOrder(): void;
+  inorder(visitor: Visitor<E>): void;
+  postorder(visitor: Visitor<E>): void;
+  levelOrder(visitor: Visitor<E>): void;
   predecessor(node: AbstractNode<E>): AbstractNode<E>;
   successor(node: AbstractNode<E>): AbstractNode<E>;
 }

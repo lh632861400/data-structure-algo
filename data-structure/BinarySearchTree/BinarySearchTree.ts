@@ -94,35 +94,84 @@ export default class BinarySearchTree<E> {
   }
 
   private preorderNode(node: Node<E>, visitor: Visitor<E>) {
-    if(!node) {
+    if(!node || visitor.stop) {
       return;
     }
 
+    if(visitor.stop) {
+      return;
+    }
     visitor.visit(node.element)
     this.preorderNode(node.left, visitor);
     this.preorderNode(node.right, visitor);
 
   }
 
-  inorder(): void {
+  /**
+   *
+   * 中序遍历
+   *
+   * */
+  inorder(visitor: Visitor<E>): void {
+    if(!visitor) {
+      return;
+    }
+
+    this.inorderNode(this.root, visitor);
+  }
+
+  private inorderNode(node: Node<E>, visitor: Visitor<E>): void {
+    if(!node || visitor.stop) {
+      return;
+    }
+
+    this.preorderNode(node.left, visitor);
+    if(visitor.stop) {
+      return;
+    }
+    visitor.visit(node.element);
+    this.preorderNode(node.right, visitor);
+  }
+
+  postorder(visitor: Visitor<E>): void {
+
+    if(!visitor) {
+      return;
+    }
+
+    this.preorderNode(this.root, visitor);
 
   }
 
-  postorder(): void {
+  postorderNode(node: Node<E>, visitor: Visitor<E>): void {
+    if(!node || visitor.stop) {
+      return;
+    }
+
+    this.preorderNode(node.left, visitor);
+    this.preorderNode(node.right, visitor);
+    if(visitor.stop) {
+      return;
+    }
+    visitor.visit(node.element)
   }
 
-  levelOrder(): void {
+  levelOrder(visitor: Visitor<E>): void {
+
+    if(!visitor) {
+      return;
+    }
 
     const queue = new Queue<Node<E>>();
 
     queue.enqueue(this.root);
 
     // 遍历当前节点的左节点和右节点，加入到队列
-    while(!queue.isEmpty()) {
+    while(!queue.isEmpty() && !visitor.stop) {
 
       const node = queue.dequeue();
 
-      console.log(node.element);
+      visitor.visit(node.element);
 
       if(node.left) {
         queue.enqueue(node.left);
