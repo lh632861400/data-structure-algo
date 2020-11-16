@@ -133,6 +133,11 @@ export default class BinarySearchTree<E> {
     this.inorderNode(node.right, visitor);
   }
 
+  /**
+   *
+   * 后序遍历
+   *
+   * */
   postorder(visitor: Visitor<E>): void {
 
     if(!visitor) {
@@ -156,6 +161,11 @@ export default class BinarySearchTree<E> {
     visitor.visit(node.element)
   }
 
+  /**
+   *
+   * 层序遍历
+   *
+   * */
   levelOrder(visitor: Visitor<E>): void {
 
     if(!visitor) {
@@ -185,6 +195,24 @@ export default class BinarySearchTree<E> {
   }
 
   predecessor(node: Node<E>): Node<E> {
+
+    // node.left != null，node.left.right.right.right...
+    if(node.left) {
+      node = node.left;
+      while(node.right) {
+        node = node.right;
+      }
+
+      return node;
+    }
+
+    // 寻找node.parent.parent.parent 到 node 为祖先节点某一个右子树上
+    while (node.parent) {
+      if(node === node.parent.right) {
+        return node.parent;
+      }
+    }
+    
     return undefined;
   }
 
@@ -254,6 +282,14 @@ class Node<E> extends AbstractNode<E> {
     super();
     this.element = element;
     this.parent = parent;
+  }
+
+  hasTwoChildren() {
+    return !!(this.left && this.right);
+  }
+
+  isLeaf() {
+    return !this.left && !this.right;
   }
 }
 
