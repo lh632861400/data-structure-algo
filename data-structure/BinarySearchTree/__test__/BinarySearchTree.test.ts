@@ -425,4 +425,51 @@ describe('BinarySearchTree', () => {
     })
 
   })
+
+  test('height', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+    //               8
+
+    //  9 5 11 4 6 8 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14, 8]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    expect(bst.size()).toBe(data.length);
+    expect(bst.height()).toBe(4);
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+    //               8       16
+    //                      15
+    bst.add(16)
+    bst.add(15)
+
+    expect(bst.height()).toBe(5);
+
+    //             9
+    //           5      11
+    bst.remove(15)
+    bst.remove(16)
+    bst.remove(8)
+    bst.remove(4)
+    bst.remove(6)
+    bst.remove(10)
+    bst.remove(14)
+
+    expect(bst.height()).toBe(2);
+
+    bst.clear()
+
+    expect(bst.height()).toBe(0);
+
+  })
 });
