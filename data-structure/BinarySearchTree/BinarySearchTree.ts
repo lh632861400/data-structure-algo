@@ -216,7 +216,6 @@ export default class BinarySearchTree<E> {
     if(node.left) {
       node = node.left;
       while(node.right) {
-        console.log(node.element)
         node = node.right;
       }
 
@@ -228,6 +227,8 @@ export default class BinarySearchTree<E> {
       if(node === node.parent.right) {
         return node.parent;
       }
+
+      node = node.parent;
     }
 
     return undefined;
@@ -240,7 +241,7 @@ export default class BinarySearchTree<E> {
       return undefined;
     }
 
-    const predecessor = this.predecessorNode(targetNode);
+    const predecessor = this.succesorNode(targetNode);
 
     if(predecessor) { // 如果存在前去节点
       return predecessor.element
@@ -266,6 +267,8 @@ export default class BinarySearchTree<E> {
       if(node === node.parent.left) {
         return node.parent;
       }
+
+      node = node.parent;
     }
 
     return undefined;
