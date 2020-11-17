@@ -418,8 +418,64 @@ export default class BinarySearchTree<E> {
 
   }
 
+  /**
+   *
+   * 判断是否是完全二叉树
+   *
+   * */
   isComplete(): boolean {
-    return false;
+
+    let node = this.root;
+
+    if(!node) {
+      return false;
+    }
+
+    // 如果node.left !== null && node.right !== null，继续判断
+
+    // 如果node.left !== null && node.right === null 或者 node.isLeaf() 则后面节点的都为叶子节点
+
+    // 如果node.left === null && node.right !== null，则不是完全二叉数
+
+    const queue = [];
+    queue.push(node);
+    let isLeaf = false;
+
+    while(queue.length) {
+
+      node = queue.shift();
+
+      // 如果isLeaf为true，则node全部为leaf node
+      if(isLeaf) {
+        if(node.isLeaf()) {
+          continue;
+        }else {
+          return false;
+        }
+      }
+
+      if(node.left) {
+        queue.push(node.left)
+
+        if(!node.right) {
+          isLeaf = true;
+        }
+      }else {
+        if(node.right) {  // 如果node.left === null && node.right !== null，则不是完全二叉数
+          return false;
+        }
+
+        // 如果node.left !== null && node.right === null 或者 node.isLeaf() 则后面节点的都为叶子节点
+        isLeaf = true;
+      }
+
+      if(node.right) { // 如果node.left !== null && node.right !== null，继续判断
+        queue.push(node.right)
+      }
+
+    }
+
+    return true;
   }
 
   toString(): string {
