@@ -341,4 +341,88 @@ describe('BinarySearchTree', () => {
     expect(bst.contains(9)).toBe(false);
 
   })
+
+  test('remove', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+    //               8
+
+    //  9 5 11 4 6 8 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14, 8]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    expect(bst.size()).toBe(data.length);
+
+    bst.remove(111)
+
+    expect(bst.size()).toBe(data.length);
+
+    //             8
+    //           5      11
+    //          4  6  10  14
+    bst.remove(9)
+
+    expect(bst.size()).toBe(data.length - 1);
+    expect(bst.contains(9)).toBe(false);
+    expect(bst.predecessor(10)).toBe(8);
+    expect(bst.successor(6)).toBe(8);
+
+    //             8
+    //           4      11
+    //             6  10  14
+    bst.remove(5)
+    expect(bst.size()).toBe(data.length - 2);
+    expect(bst.contains(5)).toBe(false);
+    expect(bst.predecessor(6)).toBe(4);
+    expect(bst.successor(4)).toBe(6);
+
+    //             8
+    //           6      11
+    //                10  14
+    bst.remove(4)
+    expect(bst.size()).toBe(data.length - 3);
+    expect(bst.contains(4)).toBe(false);
+    expect(bst.predecessor(6)).toBe(undefined);
+    expect(bst.successor(6)).toBe(8);
+
+    //             8
+    //           6      11
+    //                10
+    bst.remove(14)
+    expect(bst.size()).toBe(data.length - 4);
+    expect(bst.contains(14)).toBe(false);
+    expect(bst.predecessor(10)).toBe(8);
+    expect(bst.successor(11)).toBe(undefined);
+
+    //             8
+    //                  11
+    //                10
+    bst.remove(6)
+
+    //                  11
+    //                10
+    bst.remove(8)
+
+    let count = 0;
+    bst.preorder({
+      stop: false,
+      visit(element: number): void {
+        if(count === 0) {
+          expect(element).toBe(11);
+        }else {
+          expect(element).toBe(10);
+        }
+
+        count++;
+      }
+    })
+
+  })
 });

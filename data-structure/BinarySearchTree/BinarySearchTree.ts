@@ -73,6 +73,11 @@ export default class BinarySearchTree<E> {
     return cmp;
   }
 
+  /**
+   *
+   * 清空树形结构的
+   *
+   * */
   clear(): void {
     this.sizeMember = 0;
     this.root = undefined;
@@ -312,7 +317,59 @@ export default class BinarySearchTree<E> {
 
   }
 
+  /**
+   *
+   * 删除节点
+   *
+   * */
   remove(element: E): void {
+    let targetNode = this.node(element);
+
+    if(!targetNode) {
+      return;
+    }
+
+    // 删除的节点的度为2，查找targetNode的前驱或者后继，将前驱或者后继的element赋值给targetNode.element
+    if(targetNode.hasTwoChildren()) {
+      const predecessorNode = this.predecessorNode(targetNode);
+
+      targetNode.element = predecessorNode.element;
+
+      // 删除前驱节点
+      targetNode = predecessorNode;
+    }
+
+    // 删除节点的度为1或者度为0的节点
+    if(!targetNode.isLeaf()) { // 删除的节点的度为1
+
+      const childNode = targetNode.left || targetNode.right;
+
+      childNode.parent = targetNode.parent;
+
+      if(targetNode === this.root) { // 如果删除的是根节点
+        this.root = childNode;
+      }else {
+        if(targetNode === targetNode.parent.left) {
+          targetNode.parent.left = childNode;
+        }else {
+          targetNode.parent.right = childNode;
+        }
+      }
+
+    }else { // 删除的节点的度为0
+      if(targetNode === this.root) {
+        this.root = undefined;
+      }else {
+        if(targetNode === targetNode.parent.left) {
+          targetNode.parent.left = undefined;
+        }else {
+          targetNode.parent.right = undefined;
+        }
+      }
+    }
+
+    this.sizeMember--;
+
   }
 
   size(): number {
@@ -324,7 +381,41 @@ export default class BinarySearchTree<E> {
   }
 
   height(): number {
-    return 0;
+
+    let node = this.root;
+
+    if(!node) {
+      return 0;
+    }
+
+    const queue = [];
+    queue.push(node);
+
+    // 当前层节点在队列中的个数
+    let count = 1;
+    let totalHeight = 0;
+
+    while(queue.length) {
+      const node = queue.shift();
+      count--;
+
+      if(node.left) {
+        queue.push(node.left)
+      }
+
+      if(node.right) {
+        queue.push(node.right)
+      }
+
+      // 如果当前层在队列中的已经出队完成，队列剩余节点数量就是下一层节点的数量
+      if(count === 0) {
+        totalHeight++;
+        count = queue.length;
+      }
+    }
+
+    return totalHeight;
+
   }
 
   isComplete(): boolean {
