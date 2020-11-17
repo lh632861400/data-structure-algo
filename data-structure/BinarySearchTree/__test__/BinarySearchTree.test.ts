@@ -289,4 +289,56 @@ describe('BinarySearchTree', () => {
     expect(bst.successor(8)).toBe(9);
 
   })
+
+  test('contains', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+    //               8
+
+    //  9 5 11 4 6 8 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14, 8]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+    expect(bst.contains(9)).toBe(true);
+    expect(bst.contains(4)).toBe(true);
+    expect(bst.contains(14)).toBe(true);
+    expect(bst.contains(111)).toBe(false);
+    expect(bst.contains(12)).toBe(false);
+
+  })
+
+  test('clear', () => {
+
+    const bst = new BinarySearchTree<number>();
+
+    //             9
+    //           5      11
+    //          4  6  10  14
+    //               8
+
+    //  9 5 11 4 6 8 14
+    // 采用层序遍历的方式添加元素
+    const data = [9, 5, 11, 4, 6, 10, 14, 8]
+    for(let i = 0; i < data.length; i++) {
+      bst.add(data[i])
+    }
+
+
+    expect(bst.size()).toBe(data.length);
+    expect(bst.contains(9)).toBe(true);
+
+    bst.clear();
+
+
+    expect(bst.size()).toBe(0);
+    expect(bst.contains(9)).toBe(false);
+
+  })
 });

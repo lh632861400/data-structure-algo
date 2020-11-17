@@ -74,10 +74,17 @@ export default class BinarySearchTree<E> {
   }
 
   clear(): void {
+    this.sizeMember = 0;
+    this.root = undefined;
   }
 
+  /**
+   *
+   * 是否包含元素
+   *
+   * */
   contains(element: E): boolean {
-    return false;
+    return !!this.node(element);
   }
 
   /**
@@ -194,6 +201,11 @@ export default class BinarySearchTree<E> {
 
   }
 
+  /**
+   *
+   * 前驱节点
+   *
+   * */
   predecessor(element: E): E{
     const targetNode = this.node(element);
 
