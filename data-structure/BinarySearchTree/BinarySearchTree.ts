@@ -105,6 +105,40 @@ export default class BinarySearchTree<E> {
     this.preorderNode(this.root, visitor);
   }
 
+  preorder2(visitor: Visitor<E>): void {
+
+    let node = this.root;
+
+    if(!node) {
+      return;
+    }
+
+    const stack: Node<E>[] = [];
+
+    stack.push(node)
+
+    while(stack.length) {
+
+      if(visitor.stop) {
+        break;
+      }
+
+      node = stack.pop();
+
+      visitor.visit(node.element);
+
+      if(node.right) {
+        stack.push(node.right)
+      }
+
+      if(node.left) {
+        stack.push(node.left)
+      }
+
+    }
+
+  }
+
   private preorderNode(node: Node<E>, visitor: Visitor<E>) {
     if(!node || visitor.stop) {
       return;
@@ -132,6 +166,41 @@ export default class BinarySearchTree<E> {
     this.inorderNode(this.root, visitor);
   }
 
+  inorder2(visitor: Visitor<E>): void {
+
+    let node = this.root;
+
+    if(!node) {
+      return;
+    }
+
+    const stack: Node<E>[] = [];
+
+    do {
+
+      if(visitor.stop) {
+        break;
+      }
+
+      // 左节点全部入栈
+      while(node) {
+        stack.push(node);
+        node = node.left;
+      }
+
+      // 去除一个左节点
+      if(stack.length) {
+        node = stack.pop();
+
+        visitor.visit(node.element)
+
+        node = node.right;
+      }
+
+    }while(stack.length || node)
+
+  }
+
   private inorderNode(node: Node<E>, visitor: Visitor<E>): void {
     if(!node || visitor.stop) {
       return;
@@ -157,6 +226,44 @@ export default class BinarySearchTree<E> {
     }
 
     this.postorderNode(this.root, visitor);
+
+  }
+
+  postorder2(visitor: Visitor<E>): void {
+
+    if(!this.root) {
+      return;
+    }
+
+    const stack: Node<E>[] = [];
+
+    const results: E[] = [];
+
+    let node = null;
+
+    stack.push(this.root);
+
+    while(stack.length) {
+
+      node = stack.pop();
+
+      if(node.left) {
+        stack.push(node.left);
+      }
+
+      if(node.right) {
+        stack.push(node.right);
+      }
+
+      results.unshift(node.element)
+
+    }
+
+    results.some((element) => {
+      visitor.visit(element);
+
+      return visitor.stop;
+    })
 
   }
 
