@@ -25,8 +25,6 @@ export default class AVLTree<E> extends BinarySearchTree<E> {
 
   protected afterAdd(node: Node<E>) {
 
-    console.log(node)
-
     // 调整树节点
     while((node = node.parent)) {
 
@@ -46,6 +44,27 @@ export default class AVLTree<E> extends BinarySearchTree<E> {
       }
 
     }
+  }
+
+  protected afterRemove(node: Node<E>) {
+
+    // 删除节点之后可能导致父节点或者所有祖先节点失衡，需要调整高度最低的祖先节点，在向上调整祖先节点
+    while((node = node.parent)) {
+
+      if(this.isBalanced(node)) { // 如果节点没有失衡
+
+        // 更新节点高度
+        this.updateHeight(node)
+
+      }else { // 如果节点存在失衡
+
+        // 调整节点
+        this.reBalance(node)
+
+      }
+
+    }
+
   }
 
   private reBalance(grand: Node<E>) {

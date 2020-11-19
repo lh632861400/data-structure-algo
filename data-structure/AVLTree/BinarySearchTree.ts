@@ -491,16 +491,26 @@ export default class BinarySearchTree<E> {
     }else { // 删除的节点的度为0
       if(targetNode === this.root) {
         this.root = undefined;
+
+        this.afterRemove(targetNode)
       }else {
         if(targetNode === targetNode.parent.left) {
           targetNode.parent.left = undefined;
+
+          this.afterRemove(targetNode)
         }else {
           targetNode.parent.right = undefined;
+
+          this.afterRemove(targetNode)
         }
       }
     }
 
     this.sizeMember--;
+
+  }
+
+  protected afterRemove(node: Node<E>) {
 
   }
 
