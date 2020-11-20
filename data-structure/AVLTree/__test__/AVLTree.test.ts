@@ -1,6 +1,5 @@
 import {describe, expect, test} from '@jest/globals'
 import AVLTree from "../AVLTree";
-import BinarySearchTree from "../../BinarySearchTree/BinarySearchTree";
 
 describe('AVLTree', () => {
 

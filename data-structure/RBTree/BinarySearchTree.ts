@@ -641,7 +641,7 @@ export default class BinarySearchTree<E> {
 
     prefix = `${prefix}[${node === node.parent.left ? 'L' : 'R'}]`;
 
-    str += `${prefix} ${node.element.toString()}_p(${node.parent.element.toString()})_h(${(node as any).height})`;
+    str += `${prefix} ${node.toString()}`;
 
     result = result + '\n'
     result += str;

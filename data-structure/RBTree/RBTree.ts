@@ -41,8 +41,8 @@ export default class RBTree<E> extends BinarySearchTree<E> {
     super(comparator);
   }
 
-  static RED = false;
-  static BLACK = true;
+  static RED: boolean;
+  static BLACK: boolean;
 
   protected afterAdd(node: Node<E>) {
 
@@ -179,7 +179,7 @@ export default class RBTree<E> extends BinarySearchTree<E> {
   }
 
   private colorOf(node: Node<E>) {
-    return (<RBNode<E>> node).color;
+    return node ? (<RBNode<E>> node).color : RBTree.BLACK;
   }
 
   private isRed(node: Node<E>) {
@@ -192,6 +192,10 @@ export default class RBTree<E> extends BinarySearchTree<E> {
 
 }
 
+RBTree.RED = false;
+
+RBTree.BLACK = true;
+
 class RBNode<E> extends Node<E> {
   color: boolean;
 
@@ -199,6 +203,10 @@ class RBNode<E> extends Node<E> {
     super(element, parent);
 
     this.color = RBTree.RED;
+  }
+
+  toString() {
+    return `${this.color ? 'R_' : ''}${this.element}`
   }
 
 }
