@@ -120,8 +120,10 @@ export default class RBTree<E> extends BinarySearchTree<E> {
    * */
   protected afterRemove(node: Node<E>) {
 
-    // 如果删除的是红色节点
-    if(this.isRed(node)) {
+    // 删除的是黑色节点
+    // 节点的度为2删除的是节点的前驱或者后继来到这里的都是度为1叶子节点
+    if(this.isRed(node)) { // 替代的节点是红色节点
+      this.black(node);
       return;
     }
 
@@ -130,19 +132,12 @@ export default class RBTree<E> extends BinarySearchTree<E> {
       return;
     }
 
-    // 删除的是黑色节点
-    // 节点的度为2删除的是节点的前驱或者后继来到这里的都是度为1叶子节点
-    if(this.isRed(node)) { // 替代的节点是红色节点
-      this.black(node);
-      return;
-    }
-
     // 删除的是黑色叶子节点
     // parent.left来判断删除的节点的位置，不存在parent.left为null, parent.right存在这样的节点，这是由于红黑树性质决定的，任意一个节点到外部节点的路径包含的黑色节点个数一样，假如parent.left为null,parent.right为黑色叶子节点，这样不满足红黑树性质，只有当parent.left存在，parent.right存在这样才会满足红黑树性质，所以可以利用parent.left === null 判断原来删除节点的位置
 
     // node.isLeftChild是node.parent为黑色下溢
     const left = !node.parent.left || node.isLeftChild();
-    let sibing = node.sibling();
+    let sibing = left ? node.parent.right : node.parent.left;
 
     if(left) { // 删除的是左节点
 
@@ -166,6 +161,7 @@ export default class RBTree<E> extends BinarySearchTree<E> {
         if(this.isRed(node.parent)) { // 如果node.parent为红色, red(sibling),black(node.parent)
           this.black(node.parent);
           this.red(sibing);
+          this.rotateLeft(node.parent)
         }else { // 如果node.parent为红色, red(sibling),black(node.parent)，afterMove(node.parent)
           this.red(sibing);
           this.afterRemove(node.parent)
@@ -211,6 +207,7 @@ export default class RBTree<E> extends BinarySearchTree<E> {
         if(this.isRed(node.parent)) { // 如果node.parent为红色, red(sibling),black(node.parent)
           this.black(node.parent);
           this.red(sibing);
+          this.rotateRight(node.parent)
         }else { // 如果node.parent为红色, red(sibling),black(node.parent)，afterMove(node.parent)
           this.red(sibing);
           this.afterRemove(node.parent)

@@ -686,6 +686,7 @@ export class Node<E> extends AbstractNode<E> {
   }
 
   sibling() {
+    console.log(this.parent)
     if(this.isLeftChild()) {
       return this.parent.right;
     }
