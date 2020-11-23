@@ -57,10 +57,10 @@ export default class RBTree<E> extends BinarySearchTree<E> {
       return;
     }
 
-    // 如果添加的节点不是根节点，是grand度为1，则进行变色和旋转操作
+    // 如果添加的节点不是根节点，uncle节点是黑色，则进行变色和旋转操作
     let grand = node.parent.parent;
     let parent = node.parent;
-    if(this.isRed(node.parent) && !grand.hasTwoChildren()) {
+    if(this.isBlack(parent.sibling())) {
 
       if(parent.isLeftChild()) { // L
 
@@ -70,7 +70,6 @@ export default class RBTree<E> extends BinarySearchTree<E> {
         if(node.isLeftChild()) { // LL
 
           this.black(parent);
-          this.red(node);
           this.rotateRight(grand)
           return;
 
@@ -96,7 +95,6 @@ export default class RBTree<E> extends BinarySearchTree<E> {
         }else { // RR
 
           this.black(parent);
-          this.red(node);
           this.rotateLeft(grand)
           return;
 
@@ -107,7 +105,7 @@ export default class RBTree<E> extends BinarySearchTree<E> {
 
     // 如果添加的节点不是根节点，并且grand的度为2，则在B树结构下产生丄溢，丄溢的节点作为新添加的节点操作
 
-    const uncle = parent.isLeftChild() ? grand.right : grand.left;
+    const uncle = parent.sibling();
     this.black(parent);
     this.black(uncle);
     this.red(grand);
@@ -206,7 +204,7 @@ class RBNode<E> extends Node<E> {
   }
 
   toString() {
-    return `${this.color ? 'R_' : ''}${this.element}`
+    return `${!this.color ? 'R_' : ''}${this.element}`
   }
 
 }

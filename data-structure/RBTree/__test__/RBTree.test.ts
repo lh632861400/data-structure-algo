@@ -33,7 +33,7 @@ describe('RBTree', () => {
     // R_3                        R_16
 
     // 9 8 7 5 6 3 11 13 16
-    const data = [9, 8, 7, 5, 6]
+    const data = [9, 8, 7, 5, 6, 3, 11, 13, 16]
     for(let i = 0; i < data.length; i++) {
       rbt.add(data[i])
     }

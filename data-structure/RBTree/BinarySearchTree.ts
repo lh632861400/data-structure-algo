@@ -73,6 +73,7 @@ export default class BinarySearchTree<E> {
   /**
    *
    * 添加节点之后触发
+   * @param { Node<E> } node 添加的节点
    *
    * */
   protected afterAdd(node: Node<E>) {
@@ -680,6 +681,18 @@ export class Node<E> extends AbstractNode<E> {
 
   isRightChild() {
     return !!(this.parent && this === this.parent.right)
+  }
+
+  sibling() {
+    if(this.isLeftChild()) {
+      return this.parent.right;
+    }
+
+    if(this.isRightChild()) {
+      return this.parent.left;
+    }
+
+    return undefined;
   }
 
   toString() {
