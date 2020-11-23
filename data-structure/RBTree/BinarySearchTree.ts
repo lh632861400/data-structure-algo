@@ -489,6 +489,8 @@ export default class BinarySearchTree<E> {
         }
       }
 
+      this.afterRemove(childNode)
+
     }else { // 删除的节点的度为0
       if(targetNode === this.root) { // 删除的是根节点
         this.root = undefined;
