@@ -70,14 +70,18 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
   index(element: E) {
     let node = this.firstNode;
     let count = -1;
+    let prev = node;
 
-    while(node) {
+    while(node && node !== prev) { // node.next存在并且node !== prev
 
       count++;
 
       if(node.element === element) {
         return count;
       }
+
+      prev = node;
+      node = node.next;
 
     }
 
