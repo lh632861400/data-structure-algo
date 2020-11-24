@@ -12,6 +12,8 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
     this.firstNode = null;
   }
 
+  add(element?: E): void
+  add(index, element?: E): void
   add(index, element?: E): void {
     if(element === undefined) { // 只有一个参数
       element = index;
@@ -21,7 +23,7 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
     this._add(index, element);
   }
 
-  _add(index, element): void {
+  private _add(index, element): void {
 
     this.rangeCheckForAdd(index);
 
@@ -63,6 +65,23 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
     this.current = this.current.next;
 
     return oldElement;
+  }
+
+  index(element: E) {
+    let node = this.firstNode;
+    let count = -1;
+
+    while(node) {
+
+      count++;
+
+      if(node.element === element) {
+        return count;
+      }
+
+    }
+
+    return SingleCircleLinkedList.ELEMENT_NOT_FOUND;
   }
 
   reset(): void {
@@ -144,7 +163,6 @@ export default class SingleCircleLinkedList<E> extends AbstractList<E> {
 
     return false;
 
-    return false;
   }
 
   getElement(index: number): E {
