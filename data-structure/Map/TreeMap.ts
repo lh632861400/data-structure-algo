@@ -321,6 +321,211 @@ export default class TreeMap<K, V> implements IMap<K, V> {
   }
 
   remove(key: K): V {
+
+    let targetNode = this.node(key);
+
+    if(!targetNode) {
+      return undefined;
+    }
+
+    const oldValue = targetNode.value;
+
+    // 删除的节点的度为2，查找targetNode的前驱或者后继，将前驱或者后继的element赋值给targetNode.element
+    if(targetNode.hasTwoChildren()) {
+      const predecessorNode = this.predecessorNode(targetNode);
+
+      targetNode.key = predecessorNode.key;
+      targetNode.value = predecessorNode.value;
+
+      // 删除前驱节点
+      targetNode = predecessorNode;
+    }
+
+    // 删除节点的度为1或者度为0的节点
+    if(!targetNode.isLeaf()) { // 删除的节点的度为1
+
+      const childNode = targetNode.left || targetNode.right;
+
+      childNode.parent = targetNode.parent;
+
+      if(targetNode === this.root) { // 如果删除的是根节点
+        this.root = childNode;
+      }else {
+        if(targetNode === targetNode.parent.left) {
+          targetNode.parent.left = childNode;
+        }else {
+          targetNode.parent.right = childNode;
+        }
+      }
+
+      this.afterRemove(childNode)
+
+    }else { // 删除的节点的度为0
+      if(targetNode === this.root) { // 删除的是根节点
+        this.root = undefined;
+
+        this.afterRemove(targetNode)
+      }else {
+        if(targetNode === targetNode.parent.left) {
+          targetNode.parent.left = undefined;
+
+          this.afterRemove(targetNode)
+        }else {
+          targetNode.parent.right = undefined;
+
+          this.afterRemove(targetNode)
+        }
+      }
+    }
+
+    this.sizeMember--;
+
+    return oldValue;
+  }
+
+  /**
+   *
+   * node是删除的节点或者replacement节点
+   *
+   * */
+  protected afterRemove(node: Node<K, V>) {
+
+    // 删除的是黑色节点
+    // 节点的度为2删除的是节点的前驱或者后继来到这里的都是度为1叶子节点
+    if(this.isRed(node)) { // 替代的节点是红色节点
+      this.black(node);
+      return;
+    }
+
+    // 删除的是根节点
+    if(!node.parent) {
+      return;
+    }
+
+    // 删除的是黑色叶子节点
+    // parent.left来判断删除的节点的位置，不存在parent.left为null, parent.right存在这样的节点，这是由于红黑树性质决定的，任意一个节点到外部节点的路径包含的黑色节点个数一样，假如parent.left为null,parent.right为黑色叶子节点，这样不满足红黑树性质，只有当parent.left存在，parent.right存在这样才会满足红黑树性质，所以可以利用parent.left === null 判断原来删除节点的位置
+
+    // node.isLeftChild是node.parent为黑色下溢
+    const left = !node.parent.left || node.isLeftChild();
+    let sibing = left ? node.parent.right : node.parent.left;
+
+    if(left) { // 删除的是左节点
+
+      // 如果兄弟节点为红色
+      if(this.isRed(sibing)) {
+
+        // 旋转parent节点,red(parent),black(sibling)
+        this.black(sibing);
+        this.red(node.parent);
+        this.rotateRight(node.parent);
+
+        // 旋转之后sibling为parent的left;
+        sibing = node.parent.right;
+
+      }
+
+      // 如果兄弟节点为黑色
+
+      if(this.isBlack(sibing.left) && this.isBlack(sibing.right)) { // 如果兄弟节点没有红色子节点
+
+        if(this.isRed(node.parent)) { // 如果node.parent为红色, red(sibling),black(node.parent)
+          this.black(node.parent);
+          this.red(sibing);
+          this.rotateLeft(node.parent)
+        }else { // 如果node.parent为红色, red(sibling),black(node.parent)，afterMove(node.parent)
+          this.red(sibing);
+          this.afterRemove(node.parent)
+        }
+
+      }else {
+
+        // 兄弟节点至少有一个红色子节点
+        if(sibing.right) { // RR
+
+          this.color(sibing, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.black(sibing.right);
+
+        }else { // RL
+          this.color(sibing.left, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.rotateRight(sibing);
+          this.rotateLeft(node.parent)
+        }
+
+      }
+
+    }else { // 删除的右节点
+
+      // 如果兄弟节点为红色
+      if(this.isRed(sibing)) {
+
+        // 旋转parent节点,red(parent),black(sibling)
+        this.black(sibing);
+        this.red(node.parent);
+        this.rotateRight(node.parent);
+
+        // 旋转之后sibling为parent的left;
+        sibing = node.parent.left;
+
+      }
+
+      // 如果兄弟节点为黑色
+
+      if(this.isBlack(sibing.left) && this.isBlack(sibing.right)) { // 如果兄弟节点没有红色子节点
+
+        if(this.isRed(node.parent)) { // 如果node.parent为红色, red(sibling),black(node.parent)
+          this.black(node.parent);
+          this.red(sibing);
+          this.rotateRight(node.parent)
+        }else { // 如果node.parent为红色, red(sibling),black(node.parent)，afterMove(node.parent)
+          this.red(sibing);
+          this.afterRemove(node.parent)
+        }
+
+      }else {
+
+        // 兄弟节点至少有一个红色子节点
+        if(sibing.left) { // LL
+
+          this.color(sibing, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.black(sibing.left);
+
+        }else { // LR
+          this.color(sibing.right, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.rotateLeft(sibing);
+          this.rotateRight(node.parent)
+        }
+
+      }
+
+    }
+
+  }
+
+  private predecessorNode(node: Node<K, V>): Node<K, V> {
+
+    // node.left != null，node.left.right.right.right...
+    if(node.left) {
+      node = node.left;
+      while(node.right) {
+        node = node.right;
+      }
+
+      return node;
+    }
+
+    // 寻找node.parent.parent.parent 到 node 的祖先节点某一个右子树上
+    while (node.parent) {
+      if(node === node.parent.right) {
+        return node.parent;
+      }
+
+      node = node.parent;
+    }
+
     return undefined;
   }
 
@@ -396,7 +601,6 @@ class Node<K, V> {
   }
 
   sibling() {
-    console.log(this.parent)
     if(this.isLeftChild()) {
       return this.parent.right;
     }
