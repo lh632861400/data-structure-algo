@@ -2,7 +2,7 @@
  *
  * based on RBTree
  *
- * @module RBTree
+ * @module TreeMap
  *
  * */
 import {AbstractVisitor, Comparator, IMap} from "./IMap";
