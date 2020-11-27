@@ -563,6 +563,30 @@ export default class TreeMap<K, V> implements IMap<K, V> {
     this.inorderNode(node.right, visitor);
   }
 
+  get(key: K): V {
+    if(this.sizeMember === 0) {
+      return undefined;
+    }
+
+    let node = this.root;
+
+    while(node) {
+
+      const cmp =this.compare(key, node.key);
+
+      if(cmp === 0) {
+        return node.value
+      }else if(cmp > 0) {
+        node = node.right
+      }else {
+        node = node.left;
+      }
+
+    }
+
+    return undefined;
+  }
+
 }
 
 TreeMap.RED = false;
