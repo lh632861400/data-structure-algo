@@ -125,6 +125,9 @@ export default class HashMap<K, V> implements IMap<K, V> {
 
           }
 
+          searched = true;
+          cmp = 1;
+
         }else { // 如果没有扫描到，则在右边
           cmp = 1;
         }
@@ -379,15 +382,7 @@ export default class HashMap<K, V> implements IMap<K, V> {
   }
 
   private equals(key1, key2) {
-    if(key1 === undefined || key1 === null) {
-      return key1 === key2
-    }
-
-    if(typeof key1.equals === 'function') {
-      return key1.equals(key2)
-    }
-
-    return key1 === key2;
+    return Object.is(key1, key2)
 
   }
 
