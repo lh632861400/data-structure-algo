@@ -21,11 +21,9 @@ export interface IMap<K, V> {
 }
 
 export abstract class AbstractVisitor<K, V> {
-  stop: boolean;
-  abstract visit(key: K, value: V): void;
+  abstract visit(key: K, value: V): boolean;
 }
 
-export interface Comparator<E> {
-  compare(e1: E, e2: E): number;
+export interface Comparable {
+  compareTo(key): number
 }
-
