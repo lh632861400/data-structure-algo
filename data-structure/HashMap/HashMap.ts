@@ -33,14 +33,14 @@ export default class HashMap<K, V> implements IMap<K, V> {
 
     this.sizeMember = 0;
 
-    for(let i; i < this.table.length; i++) {
+    for(let i = 0; i < this.table.length; i++) {
       this.table[i] = undefined;
     }
 
   }
 
   containsKey(key: K): boolean {
-    return false;
+    return !!this.node(key)
   }
 
   containsValue(value: V): boolean {
@@ -48,7 +48,8 @@ export default class HashMap<K, V> implements IMap<K, V> {
   }
 
   get(key: K): V {
-    return undefined;
+    const node = this.node(key);
+    return node ? node.value : undefined;
   }
 
   isEmpty(): boolean {
@@ -157,6 +158,77 @@ export default class HashMap<K, V> implements IMap<K, V> {
     this.sizeMember++;
 
     this.afterPut(newNode, index);
+
+    return undefined;
+  }
+
+  private node(key: K): Node<K, V> {
+
+    if(this.sizeMember === 0) {
+      return undefined;
+    }
+
+    const index = this.index(key);
+    const key1 = key;
+    const h1 = this.hash(this.hashCode(key1));
+    let cmp = 0;
+
+      const root = this.table[index];
+
+      if(!root) {
+        return undefined;
+      }
+
+      const queue = [];
+      queue.push(root);
+
+      while(queue.length) {
+
+        let node = queue.shift();
+        let key2 = node.key;
+        let h2 = node.hash;
+
+        if(h1 < h2) { // 如果hash小于h2
+          cmp = -1;
+        }else if(h1 > h2) {
+          cmp = 1;
+        }else if(this.equals(key1, key2)) { // 如果hash相等，但是equals
+          cmp = 0;
+        }else if(this.comparable(key1, key2) && (cmp = key1.compareTo(2)) !== 0) { // 如果key1 key2具备可比较性
+
+        }else { // 如果hash相等,但是不equals，key1 key2不具备可比较性，扫描
+
+          let queue = [];
+          queue.push(node);
+
+          while(queue.length) {
+
+            let targetNode = queue.shift();
+
+            if(this.equals(key1, targetNode.key)) { // 如果equals
+              return node;
+            }
+
+            if(targetNode.left) {
+              queue.push(targetNode.left)
+            }
+
+            if(targetNode.right) {
+              queue.push(targetNode.right)
+            }
+
+          }
+
+          return undefined;
+
+        }
+
+        if(cmp < 0) {
+          node = node.left;
+        }else if(cmp > 0) {
+          node = node.right;
+        }
+      }
 
     return undefined;
   }
@@ -382,6 +454,14 @@ export default class HashMap<K, V> implements IMap<K, V> {
   }
 
   private equals(key1, key2) {
+    if(key1 === undefined || key1 === null) {
+      return key1 === key2;
+    }
+
+    if(typeof key1.equals === 'function') {
+      return key1.equals(key2);
+    }
+
     return Object.is(key1, key2)
 
   }
