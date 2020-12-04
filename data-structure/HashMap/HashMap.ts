@@ -44,6 +44,41 @@ export default class HashMap<K, V> implements IMap<K, V> {
   }
 
   containsValue(value: V): boolean {
+    if(this.sizeMember === 0) {
+      return false;
+    }
+
+    for(let i = 0; i < this.table.length; i++) {
+
+      const root: Node<K, V> = this.table[i];
+
+      if(!root) {
+        continue;
+      }
+
+      const queue: Node<K, V>[] = [];
+      queue.push(root);
+
+      while(queue.length) {
+
+        const node = queue.shift();
+
+        if(node.value === value) {
+          return true;
+        }
+
+        if(node.left) {
+          queue.push(node.left)
+        }
+
+        if(node.right) {
+          queue.push(node.right)
+        }
+
+      }
+
+    }
+
     return false;
   }
 
@@ -173,62 +208,62 @@ export default class HashMap<K, V> implements IMap<K, V> {
     const h1 = this.hash(this.hashCode(key1));
     let cmp = 0;
 
-      const root = this.table[index];
+    const root = this.table[index];
 
-      if(!root) {
-        return undefined;
-      }
+    if(!root) {
+      return undefined;
+    }
 
-      const queue = [];
-      queue.push(root);
+    const queue = [];
+    queue.push(root);
 
-      while(queue.length) {
+    while(queue.length) {
 
-        let node = queue.shift();
-        let key2 = node.key;
-        let h2 = node.hash;
+      let node = queue.shift();
+      let key2 = node.key;
+      let h2 = node.hash;
 
-        if(h1 < h2) { // 如果hash小于h2
-          cmp = -1;
-        }else if(h1 > h2) {
-          cmp = 1;
-        }else if(this.equals(key1, key2)) { // 如果hash相等，但是equals
-          cmp = 0;
-        }else if(this.comparable(key1, key2) && (cmp = key1.compareTo(2)) !== 0) { // 如果key1 key2具备可比较性
+      if(h1 < h2) { // 如果hash小于h2
+        cmp = -1;
+      }else if(h1 > h2) {
+        cmp = 1;
+      }else if(this.equals(key1, key2)) { // 如果hash相等，但是equals
+        cmp = 0;
+      }else if(this.comparable(key1, key2) && (cmp = key1.compareTo(2)) !== 0) { // 如果key1 key2具备可比较性
 
-        }else { // 如果hash相等,但是不equals，key1 key2不具备可比较性，扫描
+      }else { // 如果hash相等,但是不equals，key1 key2不具备可比较性，扫描
 
-          let queue = [];
-          queue.push(node);
+        let queue = [];
+        queue.push(node);
 
-          while(queue.length) {
+        while(queue.length) {
 
-            let targetNode = queue.shift();
+          let targetNode = queue.shift();
 
-            if(this.equals(key1, targetNode.key)) { // 如果equals
-              return node;
-            }
-
-            if(targetNode.left) {
-              queue.push(targetNode.left)
-            }
-
-            if(targetNode.right) {
-              queue.push(targetNode.right)
-            }
-
+          if(this.equals(key1, targetNode.key)) { // 如果equals
+            return node;
           }
 
-          return undefined;
+          if(targetNode.left) {
+            queue.push(targetNode.left)
+          }
+
+          if(targetNode.right) {
+            queue.push(targetNode.right)
+          }
 
         }
 
-        if(cmp < 0) {
-          node = node.left;
-        }else if(cmp > 0) {
-          node = node.right;
-        }
+        return undefined;
+
       }
+
+      if(cmp < 0) {
+        node = node.left;
+      }else if(cmp > 0) {
+        node = node.right;
+      }
+    }
 
     return undefined;
   }
@@ -371,6 +406,222 @@ export default class HashMap<K, V> implements IMap<K, V> {
   }
 
   remove(key: K): V {
+
+    const index = this.index(key);
+    const root = this.table[index];
+
+    if(!root) {
+      return undefined;
+    }
+
+    let oldValue = undefined;
+
+    let targetNode = this.node(key);
+
+    // 不存在这个node
+    if(!targetNode) {
+      return undefined;
+    }
+
+    oldValue = targetNode.value;
+
+    // 删除的节点的度为2，查找targetNode的前驱或者后继，将前驱或者后继的element赋值给targetNode.element
+    if(targetNode.hasTwoChildren()) {
+      const predecessorNode = this.predecessorNode(targetNode);
+
+      targetNode.key = predecessorNode.key;
+      targetNode.value = predecessorNode.value;
+      targetNode.hash = predecessorNode.hash;
+
+      // 删除前驱节点
+      targetNode = predecessorNode;
+    }
+
+    // 删除节点的度为1或者度为0的节点
+    if(!targetNode.isLeaf()) { // 删除的节点的度为1
+
+      const childNode = targetNode.left || targetNode.right;
+
+      childNode.parent = targetNode.parent;
+
+      if(targetNode === root) { // 如果删除的是根节点
+        this.table[index] = childNode;
+      }else {
+        if(targetNode === targetNode.parent.left) {
+          targetNode.parent.left = childNode;
+        }else {
+          targetNode.parent.right = childNode;
+        }
+      }
+
+      this.afterRemove(childNode)
+
+    }else { // 删除的节点的度为0
+      if(targetNode === root) { // 删除的是根节点
+        this.table[index] = undefined;
+
+        this.afterRemove(targetNode)
+      }else {
+        if(targetNode === targetNode.parent.left) {
+          targetNode.parent.left = undefined;
+
+          this.afterRemove(targetNode)
+        }else {
+          targetNode.parent.right = undefined;
+
+          this.afterRemove(targetNode)
+        }
+      }
+    }
+
+    this.sizeMember--;
+
+    return oldValue;
+  }
+
+  /**
+   *
+   * node是删除的节点或者replacement节点
+   *
+   * */
+  protected afterRemove(node: Node<K, V>) {
+
+    // 删除的是黑色节点
+    // 节点的度为2删除的是节点的前驱或者后继来到这里的都是度为1叶子节点
+    if(this.isRed(node)) { // 替代的节点是红色节点
+      this.black(node);
+      return;
+    }
+
+    // 删除的是根节点
+    if(!node.parent) {
+      return;
+    }
+
+    // 删除的是黑色叶子节点
+    // parent.left来判断删除的节点的位置，不存在parent.left为null, parent.right存在这样的节点，这是由于红黑树性质决定的，任意一个节点到外部节点的路径包含的黑色节点个数一样，假如parent.left为null,parent.right为黑色叶子节点，这样不满足红黑树性质，只有当parent.left存在，parent.right存在这样才会满足红黑树性质，所以可以利用parent.left === null 判断原来删除节点的位置
+
+    // node.isLeftChild是node.parent为黑色下溢
+    const left = !node.parent.left || node.isLeftChild();
+    let sibing = left ? node.parent.right : node.parent.left;
+
+    if(left) { // 删除的是左节点
+
+      // 如果兄弟节点为红色
+      if(this.isRed(sibing)) {
+
+        // 旋转parent节点,red(parent),black(sibling)
+        this.black(sibing);
+        this.red(node.parent);
+        this.rotateRight(node.parent, this.index(node.key));
+
+        // 旋转之后sibling为parent的left;
+        sibing = node.parent.right;
+
+      }
+
+      // 如果兄弟节点为黑色
+
+      if(this.isBlack(sibing.left) && this.isBlack(sibing.right)) { // 如果兄弟节点没有红色子节点
+
+        if(this.isRed(node.parent)) { // 如果node.parent为红色, red(sibling),black(node.parent)
+          this.black(node.parent);
+          this.red(sibing);
+          this.rotateLeft(node.parent, this.index(node.key))
+        }else { // 如果node.parent为红色, red(sibling),black(node.parent)，afterMove(node.parent)
+          this.red(sibing);
+          this.afterRemove(node.parent)
+        }
+
+      }else {
+
+        // 兄弟节点至少有一个红色子节点
+        if(sibing.right) { // RR
+
+          this.color(sibing, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.black(sibing.right);
+
+        }else { // RL
+          this.color(sibing.left, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.rotateRight(sibing, this.index(node.key));
+          this.rotateLeft(node.parent, this.index(node.parent.key))
+        }
+
+      }
+
+    }else { // 删除的右节点
+
+      // 如果兄弟节点为红色
+      if(this.isRed(sibing)) {
+
+        // 旋转parent节点,red(parent),black(sibling)
+        this.black(sibing);
+        this.red(node.parent);
+        this.rotateRight(node.parent, this.index(node.parent.key));
+
+        // 旋转之后sibling为parent的left;
+        sibing = node.parent.left;
+
+      }
+
+      // 如果兄弟节点为黑色
+
+      if(this.isBlack(sibing.left) && this.isBlack(sibing.right)) { // 如果兄弟节点没有红色子节点
+
+        if(this.isRed(node.parent)) { // 如果node.parent为红色, red(sibling),black(node.parent)
+          this.black(node.parent);
+          this.red(sibing);
+          this.rotateRight(node.parent, this.index(node.parent.key))
+        }else { // 如果node.parent为红色, red(sibling),black(node.parent)，afterMove(node.parent)
+          this.red(sibing);
+          this.afterRemove(node.parent)
+        }
+
+      }else {
+
+        // 兄弟节点至少有一个红色子节点
+        if(sibing.left) { // LL
+
+          this.color(sibing, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.black(sibing.left);
+
+        }else { // LR
+          this.color(sibing.right, this.colorOf(node.parent));
+          this.black(node.parent);
+          this.rotateLeft(sibing, this.index(sibing.key));
+          this.rotateRight(node.parent, this.index(node.parent.key))
+        }
+
+      }
+
+    }
+
+  }
+
+  private predecessorNode(node: Node<K, V>): Node<K, V> {
+
+    // node.left != null，node.left.right.right.right...
+    if(node.left) {
+      node = node.left;
+      while(node.right) {
+        node = node.right;
+      }
+
+      return node;
+    }
+
+    // 寻找node.parent.parent.parent 到 node 的祖先节点某一个右子树上
+    while (node.parent) {
+      if(node === node.parent.right) {
+        return node.parent;
+      }
+
+      node = node.parent;
+    }
+
     return undefined;
   }
 
@@ -379,6 +630,38 @@ export default class HashMap<K, V> implements IMap<K, V> {
   }
 
   traversal(visitor: AbstractVisitor<K, V>): void {
+    if(this.sizeMember === 0 || !visitor) {
+      return;
+    }
+
+    for(let i = 0; i < this.table.length; i++) {
+      const root = this.table[i];
+
+      if(!root) {
+        continue;
+      }
+
+      const queue: Node<K, V>[] = [];
+      queue.push(root);
+
+      while(queue.length) {
+
+        const node = queue.shift();
+
+        if(visitor.visit(node.key, node.value)) {
+          return;
+        }
+
+        if(node.left) {
+          queue.push(node.left)
+        }
+
+        if(node.right) {
+          queue.push(node.right)
+        }
+
+      }
+    }
   }
 
   private index(key: K): number {
