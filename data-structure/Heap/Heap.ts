@@ -61,7 +61,7 @@ export default class BinaryHeap<E> implements IHeap<E> {
     this.sizeMember++;
 
   }
-  
+
   private ensureCapacity(capacity: number) {
 
     if(capacity > this.elements.length) {
@@ -116,7 +116,9 @@ export default class BinaryHeap<E> implements IHeap<E> {
   }
 
   get(): E {
-    return undefined;
+    this.notEmptyCheck();
+
+    return this.elements[0];
   }
 
   isEmpty(): boolean {
@@ -124,11 +126,69 @@ export default class BinaryHeap<E> implements IHeap<E> {
   }
 
   remove(): E {
-    return undefined;
+    this.notEmptyCheck();
+
+    const root = this.elements[0];
+
+    this.elements[0] = this.elements[this.sizeMember - 1];
+    this.elements[this.sizeMember - 1] = undefined;
+    this.sizeMember--;
+
+    if(this.sizeMember > 0) {
+      this.siftDown(0)
+    }
+
+    return root;
+  }
+
+  private siftDown(index: number) {
+
+    const element = this.elements[index];
+
+    // 得到非叶子节点的索引
+    const half = this.sizeMember >> 1;
+
+    // 如果index小于子节点
+
+    while(index < half) {
+
+      // 默认左节点为比较大的节点
+      let childIndex = index >> 1 + 1;
+      let child = this.elements[childIndex];
+
+      // 比较右节点和左节点
+      const rightIndex = childIndex + 1;
+      if(rightIndex < this.sizeMember && this.elements[rightIndex] > child) {
+        childIndex = rightIndex;
+        child = this.elements[rightIndex];
+      }
+
+      // 如果父节点小于叶子节点
+      if(this.compare(element, child) < 0) {
+        this.elements[index] = child;
+        index = childIndex;
+      }
+
+    }
+
+    this.elements[index] = element;
+
+  }
+
+  private notEmptyCheck() {
+    if(this.sizeMember === 0) {
+      throw new Error('size is empty')
+    }
   }
 
   replace(element: E): E {
-    return undefined;
+
+    const root = this.elements[0];
+
+    this.elements[0] = element;
+    this.siftDown(0);
+
+    return root;
   }
 
   size(): number {
@@ -138,4 +198,3 @@ export default class BinaryHeap<E> implements IHeap<E> {
 }
 
 BinaryHeap.DEFAULT_CAPACITY = 10;
-
