@@ -31,14 +31,15 @@ export default class BinaryHeap<E> implements IHeap<E> {
     if(data instanceof  Array) {
       const capacity = Math.max(BinaryHeap.DEFAULT_CAPACITY, data.length)
       this.elements = new Array(capacity);
+      this.comparator = comparator;
+
+      // heapify
+      data = this.heapify(data);
 
       for(let i = 0; i < data.length; i++) {
         this.elements[i] = data[i];
       }
 
-      this.comparator = comparator;
-
-      // heapify
     }else {
       this.comparator = data;
       this.elements = new Array(BinaryHeap.DEFAULT_CAPACITY)
@@ -193,6 +194,17 @@ export default class BinaryHeap<E> implements IHeap<E> {
 
   size(): number {
     return this.sizeMember;
+  }
+
+  private heapify(elements: E[]) {
+
+    // 采用自下而上的下滤
+    const half = this.elements.length >> 1;
+    for(let i = half - 1; i >= 0; i--) {
+      this.siftDown(i)
+    }
+
+    return elements;
   }
 
 }
