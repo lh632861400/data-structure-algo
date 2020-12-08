@@ -80,7 +80,6 @@ export default class BinaryHeap<E> implements IHeap<E> {
 
   private siftUp(index: number) {
     const element = this.elements[index];
-    console.log(index)
 
     // 小于等于父节点或者已经是根节点不需要上滤
     while (index > 0) {

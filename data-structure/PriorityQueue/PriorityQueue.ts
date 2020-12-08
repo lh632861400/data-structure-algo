@@ -30,6 +30,7 @@ export default class PriorityQueue<E> implements IQueue<E> {
     if(data instanceof Array) {
       this.heap = new BinaryHeap(data, comparator)
     }else {
+      comparator = data;
       this.heap = new BinaryHeap(comparator);
     }
   }
