@@ -158,7 +158,7 @@ export default class BinaryHeap<E> implements IHeap<E> {
     while(index < half) {
 
       // 默认左节点为比较大的节点
-      let childIndex = index >> 1 + 1;
+      let childIndex = (index << 1) + 1;
       let child = this.elements[childIndex];
 
       // 比较右节点和左节点
