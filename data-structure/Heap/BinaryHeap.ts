@@ -19,9 +19,9 @@ import {Comparable, Comparator, IHeap} from "./IHeap";
 
 export default class BinaryHeap<E> implements IHeap<E> {
 
-  sizeMember: number;
-  elements: E[];
-  comparator: Comparator<E>;
+  private sizeMember: number;
+  private elements: E[];
+  private comparator: Comparator<E>;
   static DEFAULT_CAPACITY: number;
 
   constructor(comparator: Comparator<E>);
@@ -33,17 +33,19 @@ export default class BinaryHeap<E> implements IHeap<E> {
       this.elements = new Array(capacity);
       this.comparator = comparator;
 
-      // heapify
-      data = this.heapify(data);
-
       for(let i = 0; i < data.length; i++) {
         this.elements[i] = data[i];
       }
+
+      // heapify
+      this.heapify(this.elements);
 
     }else {
       this.comparator = data;
       this.elements = new Array(BinaryHeap.DEFAULT_CAPACITY)
     }
+
+    this.sizeMember = 0;
 
   }
 
@@ -78,16 +80,19 @@ export default class BinaryHeap<E> implements IHeap<E> {
 
   private siftUp(index: number) {
     const element = this.elements[index];
+    console.log(index)
 
     // 小于等于父节点或者已经是根节点不需要上滤
     while (index > 0) {
 
-      const parentIndex = index >> 1;
+      const parentIndex = (index - 1) >> 1;
       const parentElement = this.elements[parentIndex];
       if(this.compare(element, parentElement) > 0) {
         this.elements[index] = parentElement;
         index = parentIndex;
       }
+
+      break;
 
     }
 
@@ -199,12 +204,11 @@ export default class BinaryHeap<E> implements IHeap<E> {
   private heapify(elements: E[]) {
 
     // 采用自下而上的下滤
-    const half = this.elements.length >> 1;
+    const half = elements.length >> 1;
     for(let i = half - 1; i >= 0; i--) {
       this.siftDown(i)
     }
 
-    return elements;
   }
 
 }
