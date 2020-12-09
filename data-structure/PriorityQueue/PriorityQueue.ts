@@ -4,15 +4,7 @@
  *
  * @module PriorityQueue
  *
- * 二叉堆是一颗完全二叉树
- *
- * i为索引 i >= 0
- * n为元素个数
- *
- * 左子节点的索引 2 * i + 1
- * 右子节点的索引 2 * i + 2
- *
- * 非叶子节点个数floor(n / 2)
+ * 优先级队列
  *
  * */
 import {IQueue} from "./IQueue";

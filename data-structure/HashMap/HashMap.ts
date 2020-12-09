@@ -8,8 +8,8 @@
 import {AbstractVisitor, Comparable, IMap} from "./IMap";
 
 export default class HashMap<K, V> implements IMap<K, V> {
-  sizeMember: number;
-  table: Node<K, V>[];
+  private sizeMember: number;
+  private table: Node<K, V>[];
 
   constructor() {
     this.sizeMember = 0;
