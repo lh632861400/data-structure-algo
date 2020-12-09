@@ -217,9 +217,10 @@ export default class HashMap<K, V> implements IMap<K, V> {
     const queue = [];
     queue.push(root);
 
-    while(queue.length) {
+    let node = root;
 
-      let node = queue.shift();
+    while(node) {
+
       let key2 = node.key;
       let h2 = node.hash;
 
@@ -229,6 +230,7 @@ export default class HashMap<K, V> implements IMap<K, V> {
         cmp = 1;
       }else if(this.equals(key1, key2)) { // 如果hash相等，但是equals
         cmp = 0;
+        return node;
       }else if(this.comparable(key1, key2) && (cmp = key1.compareTo(2)) !== 0) { // 如果key1 key2具备可比较性
 
       }else { // 如果hash相等,但是不equals，key1 key2不具备可比较性，扫描
