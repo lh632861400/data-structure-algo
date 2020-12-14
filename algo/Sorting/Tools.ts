@@ -7,6 +7,8 @@ export default class Integer {
       const num = Integer.randomNum(min, max)
       result.push(num);
     }
+
+    return result;
   }
 
   static copy(array: number[]) {
