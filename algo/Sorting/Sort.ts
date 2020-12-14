@@ -28,6 +28,11 @@ export default abstract class Sort {
     return this.array[i1] - this.array[i2];
   }
 
+  protected  compare(v1: number, v2: number) {
+    this.cmpCount++;
+    return v1 - v2
+  }
+
   protected  swap(i1: number, i2: number) {
     const tmp = this.array[i1];
     this.array[i1] = this.array[i2];
