@@ -51,6 +51,8 @@ export default class Integer {
 
       prev = array[i]
     }
+
+    return true;
   }
 
 
