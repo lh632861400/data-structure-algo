@@ -7,10 +7,10 @@
  * 在divider阶段不断减少数组，在merge阶段不断合并数组
  *
  * 时间：
- * 最好：O(nlgn)     最差：O(nlgn + n ^ 2)     平均： O(nlgn)
+ * 最好：O(nlgn)     最差：O(nlgn)     平均： O(nlgn)
  *
  * 空间：
- * O(1)
+ * O(n / 2 + lgn)
  *
  * 是否稳定：稳定
  * in-place: in-place
@@ -54,19 +54,19 @@ export default class MergeSort extends Sort {
    * 合并[begin, mid]和[mid + 1, end]之间的数组
    *
    * */
-  merge(begin: number, mid: number, end: number) {
+  private merge(begin: number, mid: number, end: number) {
 
-    let li = 0, le = mid - begin + 1;
-    let ri = begin, re = end;
+    let li = 0, le = mid - begin;
+    let ri = mid + 1, re = end;
     let ai = begin;
 
     // 备份左边的数组
-    for(let i = 0; i <= mid; i++) {
+    for(let i = 0; i <= le; i++) {
       this.leftArray[i] = this.array[begin + i];
     }
 
     // 合并数组
-    while(li < le) {
+    while(li <= le) {
 
 
       // 如果右边的数组小于左边的数组
