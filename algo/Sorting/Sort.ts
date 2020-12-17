@@ -1,4 +1,18 @@
-
+/**
+ *
+ * based on ArrayList
+ *
+ * @module Sort
+ *
+ *   堆排序                  归并排序+      快速排序 ++
+ *  |            希尔排序 n ^ 2
+ * |              |
+ * 选择排序 n ^ 2    插入排序  n ^ 2 +
+ * |
+ * |
+ * 冒泡排序 n ^ 2
+ *
+ * */
 export default abstract class Sort {
   protected  array: number[];
   private cmpCount: number;
