@@ -20,11 +20,7 @@ import Sort from "./Sort";
 
 export default class QuickSort extends Sort {
 
-  leftArray: number[];
-
   protected sortArray(): void {
-
-    this.leftArray = new Array((this.array.length + 1) >> 1)
 
     this.quickSort(0, this.array.length - 1);
 
