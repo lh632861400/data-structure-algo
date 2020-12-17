@@ -5,8 +5,9 @@ import InsertionSort3 from "./InsertionSort3";
 import Sort from "./Sort";
 import MergeSort from "./MergeSort";
 import QuickSort from "./QuickSort";
+import ShellSort from "./ShellSort";
 
-const array1 = Integer.random(1, 10000, 2000);
+const array1 = Integer.random(1, 20, 10);
 
 function test(array: number[]) {
 
@@ -15,22 +16,26 @@ function test(array: number[]) {
   const array3 = Integer.copy(array);
   const array4 = Integer.copy(array);
   const array5 = Integer.copy(array);
+  const array6 = Integer.copy(array);
   const insertionSort1 = new InsertionSort1();
   const insertionSort2 = new InsertionSort2();
   const insertionSort3 = new InsertionSort3();
   const mergeSort = new MergeSort();
   const quickSort = new QuickSort();
+  const shellSort = new ShellSort();
 
   insertionSort1.sort(array1);
   insertionSort2.sort(array2);
   insertionSort3.sort(array3);
   mergeSort.sort(array4);
   quickSort.sort(array5);
+  shellSort.sort(array6);
 
   console.log(insertionSort1.toString('InsertionSort1'))
   console.log(insertionSort2.toString('InsertionSort2'))
   console.log(insertionSort3.toString('InsertionSort3'))
   console.log(mergeSort.toString('MergeSort'))
   console.log(quickSort.toString('QuickSort'))
+  console.log(shellSort.toString('ShellSort'))
 
 }

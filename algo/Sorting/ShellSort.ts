@@ -2,7 +2,7 @@
  *
  * based on ArrayList
  *
- * @module InsertionSort3
+ * @module ShellSort
  *
  * 每一个组序列取一个轴点，比轴点大的放右边，比轴点小的放左边
  *
