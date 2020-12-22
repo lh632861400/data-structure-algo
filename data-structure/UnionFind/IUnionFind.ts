@@ -9,7 +9,7 @@
  * */
 export default abstract class IUnionFind {
 
-  parents: number[];
+  protected parents: number[];
 
   constructor(capacity: number) {
 
@@ -44,7 +44,7 @@ export default abstract class IUnionFind {
     return this.find(v1) === this.find(v2);
   }
 
-  check(v: number) {
+  protected check(v: number) {
     if(v < 0 || v >= this.parents.length) {
       throw new Error('v is out of range')
     }
