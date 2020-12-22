@@ -27,13 +27,12 @@ export default class UnionFind_QF extends IUnionFind {
 
     if(v1 === v2) return;
 
-    while(v1 !== this.parents[v1]) {
+    const p1 = this.find(v1);
 
-      const p = this.parents[v1];
-      this.parents[v1] = v2;
-
-      v1 = p;
-
+    for(let i = 0; i < this.parents.length; i++) {
+      if(this.parents[i] === p1) {
+        this.parents[i] = v2;
+      }
     }
 
   }
